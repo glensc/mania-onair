@@ -1,0 +1,96 @@
+<head>
+<title>radiomania eeter</title>
+<style>
+body {
+	background-color: #000;
+	color: #fff;
+	font-family: Verdana, Arial, Helvetica;
+	font-size: 20pt;
+}
+</style>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script>
+jQuery(function($) {
+	var url = 'mania.php';
+	var notify = function() {};
+
+	// http://www.chromium.org/developers/design-documents/desktop-notifications/api-specification
+	if (window.webkitNotifications) {
+		notify = function(icon, title, content) {
+			var Notifications = window.webkitNotifications;
+			if (Notifications.checkPermission() == 0) {
+				var object = Notifications.createNotification(icon, title, content);
+				object.show();
+				object.ondisplay = function() {
+					// hide after 5 seconds
+					setTimeout(function() { object.cancel() }, 5000);
+				}
+				object.onclick = function() { object.cancel() };
+			}
+		}
+
+		// setup request permission button if not allowed nor disallowed
+		if (!~[0,2].indexOf(window.webkitNotifications.checkPermission())) {
+			$('#request_permission').on('click', function() {
+				window.webkitNotifications.requestPermission(function(f, b) {
+					$('#request_permission').css({display:'none'});
+					update();
+				});
+			}).css({display:'block'});
+		}
+	}
+
+	var $refresh = $('#refresh');
+	$refresh.on('click', function() {
+		$refresh.attr('disabled', 'disabled');
+		update(function(data) {
+			$refresh.removeAttr('disabled');
+		});
+	});
+
+	var cache;
+	function update_cb(data) {
+		// avoid updating if content is the same
+		if (cache && cache.time == data.time) {
+			return;
+		}
+		cache = data;
+
+		console.log("Updating: ", data);
+		var $eeter = $("#eeter");
+		$eeter.find('#artist').html(data.artist);
+		$eeter.find('#title').html(data.title);
+		$eeter.find('#time').html(data.time);
+
+		notify('', 'Radiomania', $eeter.text());
+	}
+
+	function update(cb) {
+		$.ajax({url: url, success: function(data) {
+				update_cb(data);
+				if (cb) {
+					cb(data);
+				}
+			}
+		});
+	}
+
+	update();
+	setInterval(update, 30000);
+});
+</script>
+</head>
+<body>
+
+<div id="eeter">
+	<span id="time"></span>
+	<b id="artist"></b><br/>
+	<span id="title"></span><br/>
+</div>
+
+<button id="request_permission" href="#" style="display: none">Set notification permissions for this page</button>
+
+<button id="refresh">Refresh</button>
+
+</body>
+</html>
