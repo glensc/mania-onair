@@ -23,7 +23,7 @@ jQuery(function($) {
 	var isOnline = ('onLine' in navigator) ? navigator.onLine : 1;
 
 	// setup online/offline event handlers
-	// delay update, as chromium catches online state as long as DHCP request is sent out
+	// delay update, as chromium catches online state already when only DHCP request is sent out
 	$(window)
 		.bind('online', function() { isOnline = 1; setTimeout(update, 5000); })
 		.bind('offline', function() { isOnline = 0; });
