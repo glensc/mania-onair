@@ -15,8 +15,8 @@ body {
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script>
 jQuery(function($) {
-	var url = 'mania.php';
-	var icon = 'http://www.mania.ee/templates/mania/images/favicon.ico';
+	var m_url = 'mania.php';
+	var m_icon = 'http://www.mania.ee/templates/mania/images/favicon.ico';
 	var notify = function() {};
 
 	// http://www.chromium.org/developers/design-documents/desktop-notifications/api-specification
@@ -67,14 +67,14 @@ jQuery(function($) {
 		$eeter.find('#title').html(data.title);
 		$eeter.find('#time').html(data.time);
 
-		notify('', 'Radiomania', $eeter.text());
+		notify(m_icon, 'Radiomania', $eeter.text());
 		// append to "log"
 
 		$log.append($eeter.text() + '<br/>');
 	}
 
 	function update(cb) {
-		$.ajax({url: url, success: function(data) {
+		$.ajax({url: m_url, success: function(data) {
 				update_cb(data);
 				if (cb) {
 					cb(data);
