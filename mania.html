@@ -30,8 +30,8 @@ jQuery(function($) {
 
 	// http://www.chromium.org/developers/design-documents/desktop-notifications/api-specification
 	if (window.webkitNotifications) {
+		var Notifications = webkitNotifications;
 		notify = function(icon, title, content) {
-			var Notifications = window.webkitNotifications;
 			if (Notifications.checkPermission() == 0) {
 				var object = Notifications.createNotification(icon, title, content);
 				object.show();
@@ -44,9 +44,9 @@ jQuery(function($) {
 		}
 
 		// setup request permission button if not allowed nor disallowed
-		if (!~[0,2].indexOf(window.webkitNotifications.checkPermission())) {
+		if (!~[0,2].indexOf(Notifications.checkPermission())) {
 			$('#request_permission').on('click', function() {
-				window.webkitNotifications.requestPermission(function(f, b) {
+				Notifications.requestPermission(function(f, b) {
 					$('#request_permission').css({display:'none'});
 					update();
 				});
