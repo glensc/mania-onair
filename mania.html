@@ -77,9 +77,9 @@ jQuery(function($) {
 		$eeter.find('#time').html(data.time);
 
 		notify(m_icon, m_title, $eeter.text());
-		// append to "log"
 
-		$log.append($eeter.text() + '<br/>');
+		// append to "log"
+		$log.append('<li>' + $eeter.text());
 	}
 
 	function update(cb) {
