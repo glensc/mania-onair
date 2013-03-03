@@ -20,6 +20,13 @@ jQuery(function($) {
 	var m_icon = $('#icon').attr('href');
 	var m_title = document.title;
 	var notify = function() {};
+	var isOnline = ('onLine' in navigator) ? navigator.onLine : 1;
+
+	// setup online/offline event handlers
+	// delay update, as chromium catches online state as long as DHCP request is sent out
+	$(window)
+		.bind('online', function() { isOnline = 1; setTimeout(update, 5000); })
+		.bind('offline', function() { isOnline = 0; });
 
 	// http://www.chromium.org/developers/design-documents/desktop-notifications/api-specification
 	if (window.webkitNotifications) {
@@ -76,6 +83,10 @@ jQuery(function($) {
 	}
 
 	function update(cb) {
+		if (!isOnline) {
+			return;
+		}
+
 		$.ajax({url: m_url, success: function(data) {
 				update_cb(data);
 				if (cb) {
