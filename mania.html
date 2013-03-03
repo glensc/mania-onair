@@ -1,5 +1,6 @@
 <head>
 <title>radiomania eeter</title>
+<link rel="shortcut icon" id="icon" href="http://www.mania.ee/templates/mania/images/favicon.ico">
 <style>
 body {
 	background-color: #000;
@@ -16,7 +17,7 @@ body {
 <script>
 jQuery(function($) {
 	var m_url = 'mania.php';
-	var m_icon = 'http://www.mania.ee/templates/mania/images/favicon.ico';
+	var m_icon = $('#icon').attr('href');
 	var notify = function() {};
 
 	// http://www.chromium.org/developers/design-documents/desktop-notifications/api-specification
