@@ -7,11 +7,16 @@ body {
 	font-family: Verdana, Arial, Helvetica;
 	font-size: 20pt;
 }
+#log {
+	padding-top: 3em;
+	font-size: 12px;
+}
 </style>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script>
 jQuery(function($) {
 	var url = 'mania.php';
+	var icon = 'http://www.mania.ee/templates/mania/images/favicon.ico';
 	var notify = function() {};
 
 	// http://www.chromium.org/developers/design-documents/desktop-notifications/api-specification
@@ -49,6 +54,8 @@ jQuery(function($) {
 	});
 
 	var cache;
+	var $eeter = $("#eeter");
+	var $log = $('#log');
 	function update_cb(data) {
 		// avoid updating if content is the same
 		if (cache && cache.time == data.time) {
@@ -56,12 +63,14 @@ jQuery(function($) {
 		}
 		cache = data;
 
-		var $eeter = $("#eeter");
 		$eeter.find('#artist').html(data.artist);
 		$eeter.find('#title').html(data.title);
 		$eeter.find('#time').html(data.time);
 
 		notify('', 'Radiomania', $eeter.text());
+		// append to "log"
+
+		$log.append($eeter.text() + '<br/>');
 	}
 
 	function update(cb) {
@@ -88,8 +97,10 @@ jQuery(function($) {
 </div>
 
 <button id="request_permission" href="#" style="display: none">Set notification permissions for this page</button>
-
 <button id="refresh">Refresh</button>
+
+<div id="log">
+</div>
 
 </body>
 </html>
