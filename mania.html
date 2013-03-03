@@ -25,8 +25,8 @@ jQuery(function($) {
 	// setup online/offline event handlers
 	// delay update, as chromium catches online state already when only DHCP request is sent out
 	$(window)
-		.bind('online', function() { isOnline = 1; setTimeout(update, 5000); })
-		.bind('offline', function() { isOnline = 0; });
+		.bind('online', function() { isOnline = 1; $refresh.removeAttr('disabled'); setTimeout(update, 5000); })
+		.bind('offline', function() { isOnline = 0; $refresh.attr('disabled', 'disabled'); });
 
 	// http://www.chromium.org/developers/design-documents/desktop-notifications/api-specification
 	if (window.webkitNotifications) {
