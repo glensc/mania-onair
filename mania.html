@@ -19,7 +19,7 @@ jQuery(function($) {
 	var m_url = 'mania.php';
 	var m_icon = $('#icon').attr('href');
 	var m_title = document.title;
-	var notify = function() {};
+	var notify;
 	var isOnline = ('onLine' in navigator) ? navigator.onLine : 1;
 
 	// setup online/offline event handlers
@@ -31,7 +31,7 @@ jQuery(function($) {
 	// http://www.chromium.org/developers/design-documents/desktop-notifications/api-specification
 	if (window.webkitNotifications) {
 		var Notifications = webkitNotifications;
-		notify = function(icon, title, content) {
+		notify = function(icon, title, content, pagetitle) {
 			if (Notifications.checkPermission() == 0) {
 				var object = Notifications.createNotification(icon, title, content);
 				object.show();
@@ -41,6 +41,9 @@ jQuery(function($) {
 				}
 				object.onclick = function() { object.cancel() };
 			}
+
+			// set page title as well
+			document.title = pagetitle
 		}
 
 		// setup request permission button if not allowed nor disallowed
@@ -51,6 +54,10 @@ jQuery(function($) {
 					update();
 				});
 			}).css({display:'block'});
+		}
+	} else {
+		notify = function(icon, title, content, pagetitle) {
+			document.title = pagetitle
 		}
 	}
 
@@ -76,7 +83,9 @@ jQuery(function($) {
 		$eeter.find('#title').html(data.title);
 		$eeter.find('#time').html(data.time);
 
-		notify(m_icon, m_title, $eeter.text());
+		var pagetitle = data.title + ' - ' + data.artist + ' - ' + m_title;
+
+		notify(m_icon, m_title, $eeter.text(), pagetitle);
 
 		// append to "log"
 		$log.append('<li>' + $eeter.text());
