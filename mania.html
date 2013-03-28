@@ -87,8 +87,8 @@ jQuery(function($) {
 
 		notify(m_icon, m_title, $eeter.text(), pagetitle);
 
-		// append to "log"
-		$log.append('<li>' + $eeter.text());
+		// prepend to "log"
+		$log.prepend('<li>' + $eeter.text());
 	}
 
 	function update(cb) {
