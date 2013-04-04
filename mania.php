@@ -2,7 +2,7 @@
 
 $url = 'http://www.mania.ee/eeter.php';
 require_once 'UrlUtil.php';
-$content = UrlUtil::HttpRequest($url);
+$content = UrlUtil::HttpRequest($url, array(), UrlUtil::HTTP_METHOD_GET, array(CURLOPT_TIMEOUT => 5));
 if ($content === false) {
 	die('Error fetching');
 }
