@@ -1,7 +1,8 @@
 <?php
 
 $url = 'http://www.mania.ee/eeter.php';
-$content = file_get_contents($url);
+require_once 'UrlUtil.php';
+$content = UrlUtil::HttpRequest($url);
 if ($content === false) {
 	die('Error fetching');
 }
