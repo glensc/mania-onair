@@ -30,5 +30,5 @@ if (preg_match('#<font[^>]+><b>(?P<artist>.+)</b>,<br>(?P<title>.+)<br>\((?P<tim
 	}
 
 } else {
-	echo $contents;
+	echo $content;
 }
