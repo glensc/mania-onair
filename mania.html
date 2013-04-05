@@ -6,6 +6,11 @@ body {
 	background-color: #000;
 	color: #fff;
 	font-family: Verdana, Arial, Helvetica;
+}
+a {
+	color: #fff;
+}
+#eeter {
 	font-size: 20pt;
 }
 #log {
@@ -122,9 +127,15 @@ jQuery(function($) {
 </div>
 
 <div id="kuula">
-	<a href="http://mania.ee/index.php?option=com_content&amp;task=view&amp;id=13&amp;Itemid=8"
+<a href="http://icecast.linxtelecom.com:8000/mania.mp3.m3u" target="_blank" alt="Kuula raadiot">
+<img src="http://mania.ee/templates/mania/images/kuula.jpg" width="150" height="64" alt="" border="0"></a><br>
 
-		target="_blank"><img src="http://mania.ee/templates/mania/images/kuula.jpg" width="150" height="64" alt="" border="0"></a>
+<ul>
+<li><a href="http://icecast.linxtelecom.com:8000/mania.mp3" target="_blank">Kuula .mp3 otse...</a>
+<li><a href="http://www.winamp.com/player" target="_blank">Tõmba Winamp siit...</a>
+<li><a href="http://www.videolan.org/vlc/" target="_blank">Tõmba VLC media player siit...</a>
+</ul>
+
 </div>
 
 <button id="request_permission" href="#" style="display: none">Set notification permissions for this page</button>
