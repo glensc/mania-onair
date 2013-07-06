@@ -1,0 +1,14 @@
+CACHE MANIFEST
+# Version 1.0
+# The mime type needs to be text/cache-manifest
+
+# Explicitly cached 'master entries'.
+CACHE:
+mania.html
+http://www.mania.ee/templates/mania/images/favicon.ico
+http://mania.ee/templates/mania/images/kuula.jpg
+//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js
+
+# Resources that require the user to be online.
+NETWORK:
+mania.php
