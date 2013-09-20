@@ -18,11 +18,46 @@ a {
 	padding-top: 3em;
 	font-size: 12px;
 }
+#like-hint {
+	padding-top: 2em;
+	font-size: 10px;
+	line-height: 1.4em;
+}
+#likes {
+	margin-top: 6px;
+	padding: 2px;
+	outline: 1px solid red;
+	width: 33%;
+	display: none;
+	background: #222;
+}
 #kuula {
 	padding: 1em 0 1em 0;
 }
+a.like {
+	cursor: pointer;
+	display: inline-block;
+	height: 16px;
+	width: 16px;
+	margin: 0;
+	vertical-align: middle;
+}
+i.like {
+	/*
+	Icon downloaded from
+	http://www.iconsdb.com/soylent-red-icons/facebook-like-4-icon.html
+	CC0 1.0 Universal (CC0 1.0) Public Domain
+	http://www.iconsdb.com/icons/download/soylent-red/facebook-like-4-16.png
+	*/
+	background-image: url(like.png);
+	height: 16px;
+	width: 16px;
+	display: block;
+}
 </style>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript" src="//g.nh.ee/jquery/json/json.js"></script>
+<script type="text/javascript" src="//g.nh.ee/jquery/jstorage/jstorage.js"></script>
 <script>
 jQuery(function($) {
 	var m_url = 'mania.php';
@@ -30,6 +65,8 @@ jQuery(function($) {
 	var m_title = document.title;
 	var notify;
 	var isOnline = ('onLine' in navigator) ? navigator.onLine : 1;
+	var jstorage_key = 'likes';
+	var $like = $('<div><a class=like><i class=like></i></a></div>');
 
 	// setup online/offline event handlers
 	// delay update, as chromium catches online state already when only DHCP request is sent out
@@ -38,7 +75,7 @@ jQuery(function($) {
 		.bind('offline', function() { isOnline = 0; $refresh.attr('disabled', 'disabled'); });
 
 	// http://www.chromium.org/developers/design-documents/desktop-notifications/api-specification
-	if (window.webkitNotifications) {
+	if (false && window.webkitNotifications) {
 		var Notifications = webkitNotifications;
 		notify = function(icon, title, content, pagetitle) {
 			if (Notifications.checkPermission() == 0) {
@@ -97,8 +134,34 @@ jQuery(function($) {
 		notify(m_icon, m_title, $eeter.text(), pagetitle);
 
 		// prepend to "log"
-		$log.prepend('<li>' + $eeter.text());
+		$log.prepend('<li>' + $eeter.text() + $like.html());
+
+		// add click handler to the lastly inserted entry
+		$li = $('#log li').first().find('a').on('click', function() {
+			var title = data.artist + ' - ' + data.title;
+
+			// add new like item, key value current timestamp
+			var likes = $.jStorage.get(jstorage_key) || {};
+			likes[title] = new Date().getTime();
+			$.jStorage.set(jstorage_key, likes);
+		});
 	}
+
+	$('#like').on('click', function() {
+		var $likes = $('#likes');
+		// second click clears the list
+		if ($likes.text().length) {
+			return $likes.html('').css('display', 'none');
+		}
+		var likes = $.jStorage.get(jstorage_key) || {};
+		for (var title in likes) {
+			var date = new Date(likes[title]);
+			$likes.append(title + ' - <i>'+ date.toDateString() +'<br>');
+		}
+		if ($likes.text().length) {
+			$likes.css('display', 'block');
+		}
+	})
 
 	function update(cb) {
 		if (!isOnline) {
@@ -141,6 +204,11 @@ jQuery(function($) {
 
 <button id="request_permission" href="#" style="display: none">Set notification permissions for this page</button>
 <button id="refresh">Refresh</button>
+
+<div id=like-hint>
+Hint: click <a alt="like" title="like" class=like id=like><i class=like></i></a> button, to remember your favourites.
+<div id=likes></div>
+</div>
 
 <div id="log">
 </div>
