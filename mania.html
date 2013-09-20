@@ -137,7 +137,7 @@ jQuery(function($) {
 		$log.prepend('<li>' + $eeter.text() + $like.html());
 
 		// add click handler to the lastly inserted entry
-		$li = $('#log li').first().find('a').on('click', function() {
+		$('#log li').first().find('a').on('click', function() {
 			var title = data.artist + ' - ' + data.title;
 
 			// add new like item, key value current timestamp
