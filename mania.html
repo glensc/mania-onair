@@ -75,7 +75,7 @@ jQuery(function($) {
 		.bind('offline', function() { isOnline = 0; $refresh.attr('disabled', 'disabled'); });
 
 	// http://www.chromium.org/developers/design-documents/desktop-notifications/api-specification
-	if (false && window.webkitNotifications) {
+	if (window.webkitNotifications) {
 		var Notifications = webkitNotifications;
 		notify = function(icon, title, content, pagetitle) {
 			if (Notifications.checkPermission() == 0) {
