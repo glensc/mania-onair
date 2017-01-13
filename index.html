@@ -4,7 +4,7 @@
 <link rel="shortcut icon" id="icon" href="http://www.mania.ee/templates/mania/images/favicon.ico">
 <!--
   Radiomania Now-Playing app for Chrome
-  Copyright (C) 2013-2014 Elan Ruusamäe <glen@alkohol.ee>
+  Copyright (C) 2013-2017 Elan Ruusamäe <glen@alkohol.ee>
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU Affero General Public License as
@@ -99,18 +99,21 @@ jQuery(function($) {
 		.bind('online', function() { isOnline = 1; $refresh.removeAttr('disabled'); setTimeout(update, 5000); })
 		.bind('offline', function() { isOnline = 0; $refresh.attr('disabled', 'disabled'); });
 
-	// http://www.chromium.org/developers/design-documents/desktop-notifications/api-specification
-	if (window.webkitNotifications) {
-		var Notifications = webkitNotifications;
+	// https://developer.mozilla.org/en/docs/Web/API/notification
+	if (window.Notification) {
 		notify = function(icon, title, content, pagetitle) {
-			if (Notifications.checkPermission() == 0) {
-				var object = Notifications.createNotification(icon, title, content);
-				object.show();
-				object.ondisplay = function() {
-					// hide after 5 seconds
-					setTimeout(function() { object.cancel() }, 5000);
+			if (Notification.permission === "granted") {
+				var options = {
+					body: content,
+					icon: icon
 				}
-				object.onclick = function() { object.cancel(); window.focus(); };
+				var object = new Notification(title, options);
+
+				object.onshow = function() {
+					// hide after 5 seconds
+					setTimeout(function() { object.close() }, 5000);
+				}
+				object.onclick = function() { object.close(); window.focus(); };
 			}
 
 			// set page title as well
@@ -118,11 +121,13 @@ jQuery(function($) {
 		}
 
 		// setup request permission button if not allowed nor disallowed
-		if (!~[0,2].indexOf(Notifications.checkPermission())) {
+		if (Notification.permission !== 'granted') {
 			$('#request_permission').on('click', function() {
-				Notifications.requestPermission(function(f, b) {
-					$('#request_permission').css({display:'none'});
-					update();
+				Notification.requestPermission(function(permission) {
+					if (permission === "granted") {
+						$('#request_permission').css({display:'none'});
+						update();
+					}
 				});
 			}).css({display:'block'});
 		}
